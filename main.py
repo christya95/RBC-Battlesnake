@@ -22,7 +22,7 @@ def info() -> typing.Dict:
 
   return {
     "apiversion": "1",
-    "author": "",  # TODO: Your Battlesnake Username
+    "author": "Josua Christyanton, Robert Chung",  # TODO: Your Battlesnake Username
     "color": "#006ee6",  # TODO: Choose color
     "head": "default",  # TODO: Choose head
     "tail": "default",  # TODO: Choose tail
@@ -124,4 +124,4 @@ if __name__ == "__main__":
   from server import run_server
 
   run_server({"info": info, "start": start, "move": move, "end": end})
-  
+
