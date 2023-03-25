@@ -22,7 +22,8 @@ def info() -> typing.Dict:
 
   return {
     "apiversion": "1",
-    "author": "Josua Christyanton, Robert Chung",  # TODO: Your Battlesnake Username
+    "author":
+    "Josua Christyanton, Robert Chung",  # TODO: Your Battlesnake Username
     "color": "#006ee6",  # TODO: Choose color
     "head": "default",  # TODO: Choose head
     "tail": "default",  # TODO: Choose tail
@@ -76,6 +77,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     }
   }
 
+  print("HEAD: ", my_head)
   # getting direction of head as key values
   for key in potential_coordinates:
     potential_my_head = potential_coordinates[key]
@@ -91,9 +93,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
       is_move_safe[key] = False
       # exit after this check if false
       continue
-      print(potential_my_head)
+    print("POT Head:", key, " : ", potential_my_head)
 
-  print(my_body_nohead)
+  print("BODY: ", my_body_nohead)
   print("==============================")
 
   # TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
@@ -124,4 +126,3 @@ if __name__ == "__main__":
   from server import run_server
 
   run_server({"info": info, "start": start, "move": move, "end": end})
-
