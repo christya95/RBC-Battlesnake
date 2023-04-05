@@ -56,6 +56,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   my_body = game_state['you']['body']
   my_body_nohead = my_body[1:]
+  my_length = game_state['you']['length']
+
+  opponents = game_state['board']['snakes']
+  del opponents[0]  # Remove our snake from the list
 
   # Potential positions of head
   potential_coordinates = {
@@ -77,6 +81,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
     }
   }
 
+  # TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
+
+  opponents_coordinates = []
+  opponents_heads = []
+  potential_opp_head_coords = []
+
+  for opponent in opponents:
+    opponents_coordinates.append(opponent["body"])
+    if my_length <= opponent["length"]:
+      opponents_heads.append(opponent["head"])
+    print("OPP:", opponents_coordinates)
+
+
   print("HEAD: ", my_head)
   # getting direction of head as key values
   for key in potential_coordinates:
@@ -89,17 +106,14 @@ def move(game_state: typing.Dict) -> typing.Dict:
       # exit after this check if false
       continue
       # compare potential position of snake head with its own body
-    if potential_coordinates[key] in my_body_nohead:
+    if potential_coordinates[key] in my_body_nohead or potential_coordinates[
+        key] in opponents_coordinates[0]:
       is_move_safe[key] = False
+      print("trying to avoid body")
       # exit after this check if false
       continue
-    print("POT Head:", key, " : ", potential_my_head)
 
-  print("BODY: ", my_body_nohead)
-  print("==============================")
-
-  # TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
-  # opponents = game_state['board']['snakes']
+  # print("BODY: ", my_body_nohead)
 
   # Are there any safe moves left?
   safe_moves = []
@@ -118,6 +132,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
   # food = game_state['board']['food']
 
   print(f"MOVE {game_state['turn']}: {next_move}")
+  print("==============================")
   return {"move": next_move}
 
 
