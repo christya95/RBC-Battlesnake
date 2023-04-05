@@ -61,6 +61,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
   opponents = game_state['board']['snakes']
   del opponents[0]  # Remove our snake from the list
 
+  potential_my_head = {}
+  potential_opp_head = {}
+
   # Potential positions of head
   potential_coordinates = {
     "up": {
@@ -85,23 +88,47 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   opponents_coordinates = []
   opponents_heads = []
-  potential_opp_head_coords = []
 
-  for opponent in opponents:
-    opponents_coordinates.append(opponent["body"])
-    if my_length <= opponent["length"]:
-      opponents_heads.append(opponent["head"])
-    print("OPP:", opponents_coordinates)
+  print("OPP", opponents)
+  if opponents is not None:
+    for opponent in opponents:
+      opponents_coordinates.append(opponent["body"])
+      if my_length <= opponent["length"]:
+        opponents_heads.append(opponent["head"])
+      # print("OPP:", opponents_coordinates)
 
+    # Potential positions of opponent's head
+    # TODO: consider positions of more than 1 opponent
+    potential_opp_coordinates = {
+      "up": {
+        "x": opponents_heads[0]["x"],
+        "y": opponents_heads[0]["y"] + 1
+      },
+      "down": {
+        "x": opponents_heads[0]["x"],
+        "y": opponents_heads[0]["y"] - 1
+      },
+      "right": {
+        "x": opponents_heads[0]["x"] + 1,
+        "y": opponents_heads[0]["y"]
+      },
+      "left": {
+        "x": opponents_heads[0]["x"] - 1,
+        "y": opponents_heads[0]["y"]
+      }
+    }
 
   print("HEAD: ", my_head)
+  print("OPP HEAD:", opponents_heads)
   # getting direction of head as key values
   for key in potential_coordinates:
     potential_my_head = potential_coordinates[key]
+    print("potential my head", potential_my_head)
     # compare the x and y values of potential positions of snake head with border
-    if potential_my_head["x"] == -1 or potential_my_head[
-        "x"] == board_width or potential_my_head[
-          "y"] == -1 or potential_my_head["y"] == board_height:
+    if potential_my_head["x"] == -1 \
+    or potential_my_head["x"] == board_width \
+    or potential_my_head["y"] == -1 \
+    or potential_my_head["y"] == board_height:
       is_move_safe[key] = False
       # exit after this check if false
       continue
@@ -112,8 +139,23 @@ def move(game_state: typing.Dict) -> typing.Dict:
       print("trying to avoid body")
       # exit after this check if false
       continue
+    # if potential_my_head["x"] == potential_opp_head["x"] \
+    # or potential_my_head["y"] == potential_opp_head["y"]:
+    #   is_move_safe[key] = False
+    #   print("avoiding other snakes head")
+    #   continue
+
+  for key in potential_opp_coordinates:
+    potential_opp_head = potential_opp_coordinates[key]
+    print("potential opponent head", potential_opp_head)
+    if potential_my_head["x"] == potential_opp_head["x"] \
+    or potential_my_head["y"] == potential_opp_head["y"]:
+      is_move_safe[key] = False
+      print("avoiding other snakes head")
+      continue
 
   # print("BODY: ", my_body_nohead)
+  print("==============================")
 
   # Are there any safe moves left?
   safe_moves = []
@@ -132,7 +174,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
   # food = game_state['board']['food']
 
   print(f"MOVE {game_state['turn']}: {next_move}")
-  print("==============================")
   return {"move": next_move}
 
 
