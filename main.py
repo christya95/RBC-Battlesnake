@@ -88,9 +88,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   opponents_coordinates = []
   opponents_heads = []
+  potential_opp_head = []
 
   print("OPP", opponents)
-  if opponents is not None:
+  if opponents is not []:
     for opponent in opponents:
       opponents_coordinates.append(opponent["body"])
       if my_length <= opponent["length"]:
@@ -123,7 +124,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
   # getting direction of head as key values
   for key in potential_coordinates:
     potential_my_head = potential_coordinates[key]
+    potential_opp_head.append(potential_opp_coordinates[key])
     print("potential my head", potential_my_head)
+    print("potential opp head", potential_opp_head)
     # compare the x and y values of potential positions of snake head with border
     if potential_my_head["x"] == -1 \
     or potential_my_head["x"] == board_width \
@@ -132,26 +135,17 @@ def move(game_state: typing.Dict) -> typing.Dict:
       is_move_safe[key] = False
       # exit after this check if false
       continue
-      # compare potential position of snake head with its own body
+    # compare potential position of snake head with its own body
     if potential_coordinates[key] in my_body_nohead or potential_coordinates[
         key] in opponents_coordinates[0]:
       is_move_safe[key] = False
       print("trying to avoid body")
       # exit after this check if false
       continue
-    # if potential_my_head["x"] == potential_opp_head["x"] \
-    # or potential_my_head["y"] == potential_opp_head["y"]:
-    #   is_move_safe[key] = False
-    #   print("avoiding other snakes head")
-    #   continue
-
-  for key in potential_opp_coordinates:
-    potential_opp_head = potential_opp_coordinates[key]
-    print("potential opponent head", potential_opp_head)
-    if potential_my_head["x"] == potential_opp_head["x"] \
-    or potential_my_head["y"] == potential_opp_head["y"]:
+    # Avoid opponent's potential head
+    if potential_coordinates[key] in potential_opp_head:
       is_move_safe[key] = False
-      print("avoiding other snakes head")
+      print("trying to avoid snake heads")
       continue
 
   # print("BODY: ", my_body_nohead)
